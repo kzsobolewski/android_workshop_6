@@ -3,6 +3,7 @@ package com.example.gdgandroidwebinar6.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gdgandroidwebinar6.Consumable
+import com.example.gdgandroidwebinar6.WeatherLocation
 import com.example.gdgandroidwebinar6.domain.WeatherRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,12 +23,13 @@ class MainViewModel(private val weatherRepository: WeatherRepository) : ViewMode
         }
     }
 
-    fun fetchForecast() {
+    fun fetchForecast(weatherLocation: WeatherLocation = WeatherLocation.Berlin) {
         viewModelScope.launch {
             _models.value = models.value.copy(isLoading = true)
-            val isSuccessful = weatherRepository.fetchForecast()
+            val isSuccessful = weatherRepository.fetchForecast(weatherLocation)
             val error = Consumable(if (isSuccessful) null else Unit)
-            _models.value = models.value.copy(isLoading = false, error = error)
+            _models.value =
+                models.value.copy(isLoading = false, error = error, location = weatherLocation)
         }
     }
 }

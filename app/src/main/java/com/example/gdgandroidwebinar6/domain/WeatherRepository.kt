@@ -1,6 +1,7 @@
 package com.example.gdgandroidwebinar6.domain
 
 import android.util.Log
+import com.example.gdgandroidwebinar6.WeatherLocation
 import com.example.gdgandroidwebinar6.api.WeatherService
 import com.example.gdgandroidwebinar6.database.ForecastEntity
 import com.example.gdgandroidwebinar6.database.WeatherDao
@@ -20,9 +21,9 @@ class WeatherRepository(
         }
     }
 
-    suspend fun fetchForecast(): Boolean {
+    suspend fun fetchForecast(weatherLocation: WeatherLocation): Boolean {
         try {
-            val weather = weatherService.getWeather()
+            val weather = weatherService.getWeather(weatherLocation.id)
             weatherDao.replaceForecast(forecasts = weather.forecasts.map { it.toForecastEntity() })
             return true
         } catch (e: Exception) {
